@@ -49,6 +49,7 @@ static const struct config defaults = {
             .sens = 1.0,
             .raw_sens = 1.0,
             .confine = false,
+            .disable_ingame_scroll = false,
         },
     .theme =
         {
@@ -661,6 +662,11 @@ process_config_input(struct config *cfg) {
 
     if (get_bool(cfg, "confine_pointer", &cfg->input.confine, "input.confine_pointer", false) !=
         0) {
+        return 1;
+    }
+
+    if (get_bool(cfg, "disable_ingame_scroll", &cfg->input.disable_ingame_scroll,
+                 "input.disable_ingame_scroll", false) != 0) {
         return 1;
     }
 

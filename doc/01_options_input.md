@@ -26,6 +26,7 @@ local config = {
         sensitivity = 1.0,
         raw_sensitivity = 1.0,
         confine_pointer = false,
+        disable_ingame_scroll = false,
     },
 }
 
@@ -112,6 +113,13 @@ The `confine_pointer` option allows you to lock your mouse pointer to the
 waywall window. This can be useful if you have two monitors and accidentally
 flick your mouse to the side while in your inventory, which might otherwise
 cause you to focus a different window and lose time.
+
+## Disabling ingame scrolling
+
+The `disable_ingame_scroll` option stops scroll wheel input from reaching the
+game while you are ingame (i.e. your mouse is locked to the camera), so you
+cannot change your hotbar slot with the scroll wheel. This can help you get
+used to using hotkeys instead. Scrolling still works in menus.
 
 [different languages]: https://docs.google.com/spreadsheets/d/1NM5U84PjTBA6oMDSyFgveVVWcP7i0aCIFqvQCNUotYE/edit?usp=sharing
 [libxkbcommon documentation]: https://xkbcommon.org/doc/current/user-configuration.html

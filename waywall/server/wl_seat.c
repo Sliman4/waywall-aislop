@@ -4,6 +4,7 @@
 #include "server/server.h"
 #include "server/surface.h"
 #include "server/ui.h"
+#include "server/wp_pointer_constraints.h"
 #include "server/xwayland.h"
 #include "util/alloc.h"
 #include "util/debug.h"
@@ -694,11 +695,18 @@ static const struct wl_keyboard_listener keyboard_listener = {
     .repeat_info = on_keyboard_repeat_info,
 };
 
+static bool
+is_scroll_blocked(struct server_seat *seat) {
+    // The pointer is only locked while the player is ingame (not in a menu), which is when
+    // scrolling changes the selected hotbar slot.
+    return seat->config->disable_ingame_scroll && seat->server->pointer_constraints->locked;
+}
+
 static void
 on_pointer_axis(void *data, struct wl_pointer *wl, uint32_t time, uint32_t axis, wl_fixed_t value) {
     struct server_seat *seat = data;
 
-    if (!seat->input_focus) {
+    if (!seat->input_focus || is_scroll_blocked(seat)) {
         return;
     }
 
@@ -717,7 +725,7 @@ static void
 on_pointer_axis_discrete(void *data, struct wl_pointer *wl, uint32_t axis, int32_t discrete) {
     struct server_seat *seat = data;
 
-    if (!seat->input_focus) {
+    if (!seat->input_focus || is_scroll_blocked(seat)) {
         return;
     }
 
@@ -738,7 +746,7 @@ static void
 on_pointer_axis_source(void *data, struct wl_pointer *wl, uint32_t source) {
     struct server_seat *seat = data;
 
-    if (!seat->input_focus) {
+    if (!seat->input_focus || is_scroll_blocked(seat)) {
         return;
     }
 
@@ -759,7 +767,7 @@ static void
 on_pointer_axis_stop(void *data, struct wl_pointer *wl, uint32_t time, uint32_t axis) {
     struct server_seat *seat = data;
 
-    if (!seat->input_focus) {
+    if (!seat->input_focus || is_scroll_blocked(seat)) {
         return;
     }
 
@@ -1220,6 +1228,7 @@ server_seat_config_create(struct server_seat *seat, struct config *cfg) {
 
     config->repeat_rate = cfg->input.repeat_rate;
     config->repeat_delay = cfg->input.repeat_delay;
+    config->disable_ingame_scroll = cfg->input.disable_ingame_scroll;
 
     const struct xkb_rule_names rule_names = {
         .layout = cfg->input.keymap.layout,

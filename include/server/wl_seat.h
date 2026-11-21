@@ -71,6 +71,7 @@ struct server_seat {
 
 struct server_seat_config {
     int repeat_rate, repeat_delay;
+    bool disable_ingame_scroll;
     struct server_seat_keymap keymap;
 
     struct server_seat_remaps {

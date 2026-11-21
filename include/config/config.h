@@ -40,6 +40,7 @@ struct config {
         double sens;
         double raw_sens;
         bool confine;
+        bool disable_ingame_scroll;
     } input;
     struct {
         uint8_t background[4];
